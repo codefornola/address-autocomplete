@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <script src="trie.js" type="text/javascript"></script>
+  <script src="addresses.js" type="text/javascript"></script>
+</head>
+<body>
+<label>Search for address:</label>
+<input id="addressSearch" type="text" list="addressList" onkeyup="keyup()"/>
+<datalist id="addressList"/>
+
+<script type="text/javascript">
+var trie = new Trie();
+
+var start = new Date();
+addresses.forEach(address => trie.add(address));
+var loadTime = new Date() - start;
+console.log('loading '+ addresses.length +' addresses took '+ loadTime +' ms');
+
+var dataList = document.getElementById("addressList");
+function keyup() {
+  dataList.innerHTML = "";
+  var searchTerm = document.getElementById("addressSearch").value;
+  var start = new Date();
+  var results = trie.autocomplete(searchTerm);
+  var loadTime = new Date() - start;
+  console.log('searching for '+ searchTerm +' took '+ loadTime +' ms to find '+ results.length +' addresses');
+  console.log(results.slice(-5));
+  buildDataList(results);
+}
+
+function buildDataList(results) {
+  // only grab the first 5
+  results.slice(0, 5).map(result => {
+    var option = document.createElement("option");
+    option.value = result;
+    dataList.appendChild(option);
+  });
+}
+</script>
+</body>
+</html>
